@@ -1,0 +1,6 @@
+(library
+ (name amb_examples)
+ (inline_tests)
+ (libraries amb core)
+ (preprocess
+  (pps ppx_jane)))

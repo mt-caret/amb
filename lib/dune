@@ -1,0 +1,6 @@
+(library
+ (name amb)
+ (inline_tests)
+ (libraries core multicont core_kernel.nonempty_list)
+ (preprocess
+  (pps ppx_jane)))
