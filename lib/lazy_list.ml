@@ -31,7 +31,29 @@ let rec map : 'a t -> f:('a -> 'b) -> 'b t =
   | Cons (x, xs) -> Cons (f x, lazy (map (force xs) ~f))
 ;;
 
+let concat_map t ~f = concat (map t ~f)
+
 let uncons_exn = function
   | Nil -> failwith "uncons_exn: empty list"
   | Cons (x, xs) -> x, force xs
 ;;
+
+module Ref = struct
+  type nonrec 'a t = 'a t ref
+
+  let create t = ref t
+
+  let next t =
+    match !t with
+    | Nil -> None
+    | Cons (x, xs) ->
+      t := force xs;
+      Some x
+  ;;
+
+  let next_exn t =
+    match next t with
+    | None -> failwith "next_exn: no more elements"
+    | Some x -> x
+  ;;
+end

@@ -4,7 +4,7 @@ open! Amb
 let n_queens () =
   List.range 0 8
   |> List.fold ~init:[] ~f:(fun queen_coordinates row ->
-    let col = amb (List.range 0 8) in
+    let col = amb' (List.range 0 8) in
     List.iter queen_coordinates ~f:(fun (r, c) ->
       if c = col || r - c = row - col || r + c = row + col then fail ());
     (row, col) :: queen_coordinates)
