@@ -22,7 +22,12 @@ let board_to_string queen_coordinates =
 ;;
 
 let%expect_test "n_queens" =
-  collect_one ~f:n_queens |> Option.value_exn |> board_to_string |> print_endline;
+  let result = collect_lazy ~f:n_queens |> Lazy_list.Ref.create in
+  let print_one () =
+    Lazy_list.Ref.next result
+    |> Option.iter ~f:(fun board -> board_to_string board |> print_endline)
+  in
+  print_one ();
   [%expect
     {|
     Q_______
@@ -33,5 +38,16 @@ let%expect_test "n_queens" =
     ______Q_
     _Q______
     ___Q____
+    |}];
+  print_one ();
+  [%expect {|
+    Q_______
+    _____Q__
+    _______Q
+    __Q_____
+    ______Q_
+    ___Q____
+    _Q______
+    ____Q___
     |}]
 ;;

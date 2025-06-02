@@ -81,7 +81,9 @@ let%expect_test "sudoku" =
 ...419..5
 ....8..79|}
   in
-  collect_one ~f:(fun () -> solve problem) |> Option.value_exn |> print_solution;
+  let result = collect_lazy ~f:(fun () -> solve problem) |> Lazy_list.Ref.create in
+  let print_one () = Lazy_list.Ref.next result |> Option.iter ~f:print_solution in
+  print_one ();
   [%expect
     {|
     534678912
@@ -93,5 +95,7 @@ let%expect_test "sudoku" =
     961537284
     287419635
     345286179
-    |}]
+    |}];
+  print_one ();
+  [%expect {||}]
 ;;
